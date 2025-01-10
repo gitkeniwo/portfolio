@@ -1,0 +1,8 @@
+unleveraged:
+  trading211: 2800
+  revolut: 1500
+  crypto_spot: 3700
+
+leveraged:
+  lbhk: [1750, 1454]
+  lbsg: [2800, 2100]

@@ -1,0 +1,44 @@
+#!/usr/bin/env python3
+
+import yaml
+import os
+import argparse
+import sys
+
+from handler.analyzer import analyze_portfolio
+
+CONFIG_PATH_HOME = os.path.expanduser("~/.portfolio.yaml")
+CONFIG_PATH_RELATIVE = os.path.join(".", "portfolio.yaml")
+
+def main(args):
+    
+    if args.file:
+        try:
+            with open(args.file, 'r') as file:
+                portfolio = yaml.safe_load(file)
+        except FileNotFoundError:
+            print(f'FileNotFoundError: Portfolio file not found at {args.file}. Please reexamine your input.')
+            sys.exit(1)
+    else:
+        try:
+            with open(CONFIG_PATH_HOME, 'r') as file:
+                portfolio = yaml.safe_load(file)
+        except FileNotFoundError:
+            try:
+                with open(CONFIG_PATH_HOME, 'r') as file:
+                    portfolio = yaml.safe_load(file)
+            except FileNotFoundError:                   
+                print(f'FileNotFoundError: Portfolio file not found at {CONFIG_PATH_HOME} or {CONFIG_PATH_RELATIVE}. Please put your portfolio.yaml under correct folder paths.')
+                sys.exit(1)
+        
+    analyze_portfolio(portfolio)
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description = 'Build, manage and view your positions and portfolio.')
+    
+    parser.add_argument('--file', '-f', 
+                        help= 'Path to your config file. Default at ~/.portfolio.yaml or ./portfolio.yaml')
+    
+    args = parser.parse_args()
+    
+    main(args)
